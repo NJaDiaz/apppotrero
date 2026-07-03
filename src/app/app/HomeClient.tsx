@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -19,6 +19,8 @@ interface Props {
   places: Place[]
 }
 
+
+
 export default function HomeClient({ businesses, events, banners, places }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [bannerIdx, setBannerIdx]     = useState(0)
@@ -31,6 +33,19 @@ export default function HomeClient({ businesses, events, banners, places }: Prop
     e.preventDefault()
     if (searchQuery.trim()) router.push(`/buscar?q=${encodeURIComponent(searchQuery)}`)
   }
+
+  useEffect(() => {
+  if (banners.length <= 1) return
+
+  const interval = setInterval(() => {
+    setBannerIdx((prev) => (prev + 1) % banners.length)
+  }, 9000)
+
+  return () => clearInterval(interval)
+}, [banners.length])
+
+
+
 
   return (
     
@@ -49,30 +64,66 @@ export default function HomeClient({ businesses, events, banners, places }: Prop
 
       <div className="relative">
         <div className="relative h-64 overflow-hidden">
-          {banners.length > 0
-            ? <Image src={banners[bannerIdx]?.image_url || ''}
-                alt="Banner" fill className="object-cover" priority />
-            : <div className="w-full h-full bg-gradient-to-br from-brand-500 to-orange-400" />
-          }
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/15 to-black/70" />
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <p className="text-white/75 text-sm font-medium mb-0.5">Cámara de Comercio, Turismo y Afines</p>
-            <h1 className="font-display font-black text-white text-2xl leading-tight">
-              Potrero de los Funes
-            </h1>
-            <p className="text-white/90 text-sm md:text-lg font-light pb-2">
-              Descubrí dónde hospedarte, comer, y qué hacer hoy.
-            </p>
-          </div>
-          {banners.length > 1 && (
-            <div className="absolute bottom-4 right-4 flex gap-1">
-              {banners.map((_: any, i: number) => (
-                <button key={i} onClick={() => setBannerIdx(i)}
-                  className={`h-1.5 rounded-full transition-all ${i === bannerIdx ? 'bg-white w-4' : 'bg-white/50 w-1.5'}`} />
-              ))}
-            </div>
-          )}
-        </div>
+  {banners.length > 0 ? (
+    banners.map((banner, index) => (
+      <Image
+        key={banner.id ?? index}
+        src={banner.image_url}
+        alt={`Banner ${index + 1}`}
+        fill
+        priority={index === 0}
+        sizes="100vw"
+        className={`
+          object-cover
+          transition-opacity
+          duration-1000
+          ease-in-out
+          absolute inset-0
+          ${index === bannerIdx ? 'opacity-100' : 'opacity-0'}
+        `}
+      />
+    ))
+  ) : (
+    <div className="w-full h-full bg-gradient-to-br from-brand-500 to-orange-400" />
+  )}
+
+  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/15 to-black/70" />
+
+  <div className="absolute bottom-0 left-0 right-0 p-5">
+    <p className="text-white/75 text-sm font-medium mb-0.5">
+      Cámara de Comercio, Turismo y Afines
+    </p>
+
+    <h1 className="font-display font-black text-white text-2xl leading-tight">
+      Potrero de los Funes
+    </h1>
+
+    <p className="text-white/90 text-sm md:text-lg font-light pb-2">
+      Descubrí dónde hospedarte, comer y qué hacer hoy.
+    </p>
+  </div>
+
+  {banners.length > 1 && (
+    <div className="absolute bottom-4 right-4 flex gap-1.5">
+      {banners.map((_, i) => (
+        <button
+          key={i}
+          onClick={() => setBannerIdx(i)}
+          className={`
+            rounded-full
+            transition-all
+            duration-300
+            ${
+              i === bannerIdx
+                ? 'w-5 h-1.5 bg-white'
+                : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/70'
+            }
+          `}
+        />
+      ))}
+    </div>
+  )}
+</div>
 
         <div className="px-4 -mt-5 relative z-10">
           <form onSubmit={handleSearch}
