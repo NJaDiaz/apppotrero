@@ -17,8 +17,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: '*.supabase.in' },
     ],
-    // Permitir cualquier imagen externa (para fotos de comercios)
-    unoptimized: process.env.NODE_ENV === 'development',
+      unoptimized: true,
   },
 
   async headers() {

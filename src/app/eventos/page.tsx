@@ -22,8 +22,8 @@ export default function EventosPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <PageHeader title="Eventos" backHref="/app" />
+<div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 pb-24">
+        <PageHeader title="Eventos" backHref="/app" />
 
       <div className="max-w-lg mx-auto px-4 py-5 space-y-4">
         {loading ? (
@@ -38,46 +38,128 @@ export default function EventosPage() {
           events.map(event => {
             const date = new Date(event.starts_at)
             return (
-              <Link key={event.id} href={`/eventos/${event.id}`}>
-                <div className="bg-white rounded-2xl overflow-hidden shadow-card card-hover">
-                  {event.image_url ? (
-                    <div className="relative h-44">
-                      <Image src={event.image_url} alt={event.title} fill className="object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute top-3 left-3 bg-brand-500 text-white font-display font-black text-2xl w-12 h-14 rounded-xl flex flex-col items-center justify-center leading-none">
-                        <span>{date.getDate()}</span>
-                        <span className="text-[10px] font-bold uppercase">{date.toLocaleDateString('es-AR', { month: 'short' })}</span>
-                      </div>
-                      {event.is_free ? (
-                        <div className="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-lg">GRATIS</div>
-                      ) : event.price ? (
-                        <div className="absolute top-3 right-3 bg-white text-gray-900 text-xs font-bold px-2 py-1 rounded-lg">${event.price}</div>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div className="bg-brand-50 p-4 flex items-center gap-4">
-                      <div className="bg-brand-500 text-white font-display font-black text-2xl w-14 h-16 rounded-xl flex flex-col items-center justify-center leading-none flex-shrink-0">
-                        <span>{date.getDate()}</span>
-                        <span className="text-[10px] font-bold uppercase">{date.toLocaleDateString('es-AR', { month: 'short' })}</span>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900">{event.title}</h3>
-                        <p className="text-sm text-gray-500">{event.location}</p>
-                      </div>
-                    </div>
-                  )}
-                  <div className="p-4">
-                    {event.image_url && <h3 className="font-bold text-gray-900 mb-2">{event.title}</h3>}
-                    <p className="text-sm text-gray-500 line-clamp-2 mb-3">{event.description}</p>
-                    <div className="flex flex-wrap gap-3 text-xs text-gray-400">
-                      <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.location}</span>
-                      <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />
-                        {date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })} hs
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <Link key={event.id} href={`/eventos/${event.id}`} className="block group">
+  <article className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+
+    {event.image_url ? (
+      <div className="relative h-56 overflow-hidden">
+
+        <Image
+          src={event.image_url}
+          alt={event.title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+        {/* Fecha */}
+
+        <div className="absolute left-4 top-4 rounded-2xl bg-white/90 backdrop-blur-md px-3 py-2 shadow-lg">
+          <div className="text-center leading-none">
+            <p className="text-2xl font-black text-brand-600">
+              {date.getDate()}
+            </p>
+            <p className="text-[11px] uppercase tracking-wider font-bold text-gray-600">
+              {date.toLocaleDateString('es-AR', {
+                month: 'short'
+              })}
+            </p>
+          </div>
+        </div>
+
+        {/* Precio */}
+
+        {event.is_free ? (
+          <div className="absolute right-4 top-4 rounded-full bg-emerald-500/95 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+            GRATIS
+          </div>
+        ) : event.price ? (
+          <div className="absolute right-4 top-4 rounded-full bg-white/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold shadow-lg">
+            ${event.price}
+          </div>
+        ) : null}
+
+        {/* Título */}
+
+        <div className="absolute bottom-0 left-0 right-0 p-5">
+          <h2 className="text-xl font-black text-white drop-shadow-lg">
+            {event.title}
+          </h2>
+        </div>
+
+      </div>
+    ) : (
+      <div className="bg-gradient-to-r from-brand-500 to-orange-500 p-6 text-white">
+
+        <div className="flex items-center gap-4">
+
+          <div className="rounded-2xl bg-white/20 px-4 py-3 text-center backdrop-blur">
+
+            <p className="text-3xl font-black">
+              {date.getDate()}
+            </p>
+
+            <p className="text-xs uppercase tracking-wider">
+              {date.toLocaleDateString('es-AR', {
+                month: 'short'
+              })}
+            </p>
+
+          </div>
+
+          <div>
+
+            <h2 className="text-xl font-black">
+              {event.title}
+            </h2>
+
+            <p className="text-sm text-white/80">
+              {event.location}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+    )}
+
+    <div className="space-y-4 p-5">
+
+      <p className="line-clamp-2 text-sm leading-6 text-gray-600">
+        {event.description}
+      </p>
+
+      <div className="flex flex-wrap gap-2">
+
+        <div className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700">
+
+          <MapPin className="h-4 w-4 text-brand-500" />
+
+          {event.location}
+
+        </div>
+
+        <div className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700">
+
+          <Clock className="h-4 w-4 text-brand-500" />
+
+          {date.toLocaleTimeString('es-AR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+
+          hs
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </article>
+</Link>
             )
           })
         )}

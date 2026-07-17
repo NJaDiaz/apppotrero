@@ -6,6 +6,7 @@ import { ArrowLeft, Plus, CalendarDays, Trash2, ToggleLeft, ToggleRight, Loader2
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import type { Event } from '@/types'
+import ImageUploader from '@/components/admin/ImageUploader'
 
 const EMPTY = { title:'', description:'', location:'', image_url:'', starts_at:'', ends_at:'', is_free:true, price:'' }
 
@@ -81,7 +82,6 @@ export default function AdminEventosPage() {
             {[
               { label:'Título', key:'title', placeholder:'Festival de Música' },
               { label:'Lugar', key:'location', placeholder:'Anfiteatro Municipal' },
-              { label:'URL de imagen (opcional)', key:'image_url', placeholder:'https://...' },
             ].map(({ label, key, placeholder }) => (
               <div key={key}>
                 <label className="text-xs font-bold text-gray-500 uppercase mb-1.5 block">{label}</label>
@@ -89,6 +89,13 @@ export default function AdminEventosPage() {
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-brand-400" />
               </div>
             ))}
+            <ImageUploader
+  label="Imagen del evento"
+  value={form.image_url}
+  onChange={(url) => set('image_url', url)}
+  bucket="eventos-images"
+  aspectRatio="cover"
+/>
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase mb-1.5 block">Descripción</label>
               <textarea required value={form.description} onChange={e => set('description', e.target.value)} rows={3}

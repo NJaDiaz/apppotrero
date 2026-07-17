@@ -1,7 +1,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 
-export type UploadBucket = 'business-images' | 'business-logos' | 'place-images'
+export type UploadBucket = 'business-images' | 'business-logos' | 'place-images' | 'eventos-images'
 
 export async function uploadImage(file: File, bucket: UploadBucket): Promise<string> {
   const supabase = createClient()

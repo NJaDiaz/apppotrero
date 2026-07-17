@@ -43,7 +43,7 @@ export default function EventoPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="relative h-72">
+      <div className="relative aspect-[16/10] overflow-hidden">
         {event.image_url ? (
           <Image src={event.image_url} alt={event.title} fill className="object-cover" />
         ) : (
@@ -61,9 +61,9 @@ export default function EventoPage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4">
-        <div className="bg-white rounded-3xl p-5 shadow-card-hover">
-          <div className="flex items-start gap-4 mb-4">
+<div className="max-w-lg mx-auto px-4 -mt-12 relative z-10 space-y-5">
+<div className="rounded-[30px] bg-white p-6 shadow-xl ring-1 ring-gray-100">
+            <div className="flex items-start gap-4 mb-4">
             <div className="bg-brand-500 text-white rounded-2xl p-3 text-center min-w-[60px] flex-shrink-0">
               <div className="font-display font-black text-2xl leading-none">{date.getDate()}</div>
               <div className="text-[10px] font-bold uppercase mt-0.5">{date.toLocaleDateString('es-AR', { month: 'short' })}</div>

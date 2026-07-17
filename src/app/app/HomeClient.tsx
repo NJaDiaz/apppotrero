@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, SlidersHorizontal, ChevronRight, Star, MapPin, CalendarDays, Map, Newspaper } from 'lucide-react'
+import { Search, SlidersHorizontal, ChevronRight, Star, Clock, MapPin, CalendarDays, Map, Newspaper } from 'lucide-react'
 import BottomNav from '@/components/shared/BottomNav'
 import BusinessCard from '@/components/business/BusinessCard'
 import PlacesCarousel from '@/components/places/PlacesCarousel'
@@ -224,33 +224,22 @@ hover:shadow-lg"
           </section>
         )}
 
-        {/* Eventos */}
+       {/* Eventos */}
 {events.length > 0 && (
   <section>
     <div className="mb-5 flex items-end justify-between">
-
       <div>
-        <h2 className="font-display text-xl font-black text-gray-900">
-          🎉 Próximos eventos
+        <h2 className="text-2xl font-black tracking-tight text-gray-900">
+          Próximos eventos
         </h2>
 
-        <p className="mt-1 text-sm text-gray-500">
-          No te pierdas todo lo que está pasando.
+        <p className="mt-1 max-w-xs text-sm leading-6 text-gray-500">
+          Descubrí festivales, espectáculos y actividades para disfrutar en Potrero de los Funes.
         </p>
       </div>
-
-      <Link
-        href="/eventos"
-        className="flex items-center gap-1 text-sm font-bold text-brand-500 transition hover:text-brand-600"
-      >
-        Ver todos
-        <ChevronRight className="h-4 w-4" />
-      </Link>
-
     </div>
 
-    <div className="space-y-4">
-
+    <div className="space-y-5">
       {events.slice(0, 3).map((event) => {
         const date = new Date(event.starts_at)
 
@@ -260,59 +249,78 @@ hover:shadow-lg"
             href={`/eventos/${event.id}`}
             className="group block"
           >
-            <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <article className="overflow-hidden rounded-[28px] bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
-              <div className="flex gap-4 p-4">
+              <div className="relative aspect-[16/9] overflow-hidden">
 
-                <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl">
+                {event.image_url ? (
+                  <Image
+                    src={event.image_url}
+                    alt={event.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-500 to-orange-500">
+                    <CalendarDays className="h-12 w-12 text-white/70" />
+                  </div>
+                )}
 
-                  {event.image_url ? (
-                    <Image
-                      src={event.image_url}
-                      alt={event.title}
-                      fill
-                      className="object-cover transition duration-500 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-brand-50">
-                      <CalendarDays className="h-8 w-8 text-brand-300" />
-                    </div>
-                  )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
+                {/* Fecha */}
+                <div className="absolute left-4 top-4 rounded-2xl bg-white/90 px-3 py-2 backdrop-blur-md shadow-lg">
+                  <p className="text-center text-2xl font-black leading-none text-brand-600">
+                    {date.getDate()}
+                  </p>
+
+                  <p className="text-center text-[10px] font-bold uppercase tracking-wide text-gray-600">
+                    {date.toLocaleDateString("es-AR", {
+                      month: "short",
+                    })}
+                  </p>
                 </div>
 
-                <div className="flex flex-1 gap-4">
-
-                  <div className="flex w-12 flex-col items-center justify-center rounded-2xl bg-brand-50">
-
-                    <span className="font-display text-2xl font-black text-brand-600">
-                      {date.getDate()}
-                    </span>
-
-                    <span className="text-[10px] font-bold uppercase text-brand-500">
-                      {date.toLocaleDateString('es-AR', {
-                        month: 'short',
-                      })}
-                    </span>
-
+                {/* Precio / Gratis */}
+                {event.is_free ? (
+                  <div className="absolute right-4 top-4 rounded-full bg-emerald-500/95 px-3 py-1.5 text-xs font-bold text-white shadow-lg backdrop-blur">
+                     GRATIS
                   </div>
+                ) : event.price ? (
+                  <div className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-gray-900 shadow-lg backdrop-blur">
+                    ${event.price}
+                  </div>
+                ) : null}
 
-                  <div className="min-w-0 flex-1">
+                {/* Contenido */}
+                <div className="absolute bottom-0 left-0 right-0 p-5">
 
-                    <h3 className="truncate text-base font-bold text-gray-900">
-                      {event.title}
-                    </h3>
+                  <h3 className="line-clamp-2 text-xl font-black leading-tight text-white drop-shadow-lg">
+                    {event.title}
+                  </h3>
 
-                    <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+
+                    <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-white/20 px-3 py-2 text-sm text-white backdrop-blur-md">
+
                       <MapPin className="h-4 w-4 flex-shrink-0" />
-                      <span className="truncate">{event.location}</span>
+
+                      <span className="truncate">
+                        {event.location}
+                      </span>
+
                     </div>
 
-                    {event.is_free && (
-                      <span className="mt-3 inline-flex rounded-full bg-gradient-to-r from-emerald-500 to-green-500 px-3 py-1 text-[11px] font-bold text-white shadow">
-                        GRATIS
-                      </span>
-                    )}
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-2 text-sm text-white backdrop-blur-md">
+
+                      <Clock className="h-4 w-4 flex-shrink-0" />
+
+                      {date.toLocaleTimeString("es-AR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+
+                    </div>
 
                   </div>
 
@@ -320,15 +328,13 @@ hover:shadow-lg"
 
               </div>
 
-            </div>
+            </article>
           </Link>
         )
       })}
-
     </div>
   </section>
 )}
-
 
 {/* Comercios */}
 
